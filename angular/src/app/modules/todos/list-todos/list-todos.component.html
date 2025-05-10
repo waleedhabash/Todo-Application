@@ -1,0 +1,104 @@
+<div class="card pt-3">
+    <form class="card-body" [formGroup]="searchForm">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="filter">Status</label>
+                <select class="form-control" formControlName="filter" id="filter">
+                    <option [value]=>Pending</option>
+                    <option [value]=>InProgress</option>
+                    <option [value]=>Complete</option>
+            </select>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="text-right">
+                <button class="btn btn-primary" (click)="searchTodos()">Search</button>
+                <button class="btn btn-secondary m-2" (click)="addTodo()">Add Todo</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (todos) 
+{
+
+    <ngx-datatable class="material" 
+    [rows]="(todos$ | async)?.items || []" 
+    [count]="(todos$ | async)?.totalCount || 0" 
+    [columnMode]="'force'"
+    [headerHeight]="50" 
+    [footerHeight]="50" 
+    [rowHeight]="50"
+    [footerHeight]="50"
+    [limit]="5">
+    <ngx-datatable-column name="Title" prop="title">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.title }}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Description" prop="description">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.description}}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Status" prop="status">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            @if (row.status === 0) {
+                <span class="badge bg-secondary">Pending</span>
+            } @else if (row.status === 1) {
+                <span class="badge bg-warning">InProgress</span>
+            } @else {
+                <span class="badge bg-success">Complete</span>
+            }
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Priority" prop="priority">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            @if (row.priority === 0) {
+                <span class="badge bg-success">Low</span>
+            } @else if (row.status === 1) {
+                <span class="badge bg-secondary">Medium</span>
+            } @else {
+                <span class="badge bg-warning">High</span>
+            }
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="dueDate" prop="dueDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.dueDate}}
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="createdDate" prop="createdDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.createdDate}}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="lastModifiedDate" prop="lastModifiedDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.lastModifiedDate}}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Actions" prop="name">
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                         let-row="row">
+                                         <button type="button" class="btn btn-outline-success"
+                                             (click)="editTodo(row.id)">Edit</button>
+                                         <button type="button" class="btn btn-outline-danger"
+                                             (click)="deleteTodo(row.id)">Delete</button>
+     
+     
+                   </ng-template>
+               </ngx-datatable-column>
+</ngx-datatable>
+
+
+}@else{
+<div class="alert alert-info" role="alert">
+    No Todos Added
+</div>
+}
